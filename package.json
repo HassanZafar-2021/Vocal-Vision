@@ -1,0 +1,17 @@
+{
+  "name": "youtube-whisperer",
+  "version": "1.0.0",
+  "description": "A chatbot through which we can communicate with youtube videos.\r We can create a website on which we can add all the videos we want to chat with, and when we ask our chatbot questions, it will refer the saved videos and answer our questions.",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
