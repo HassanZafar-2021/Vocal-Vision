@@ -31,10 +31,12 @@ def diarize_audio(audio_path):
     diarization = pipeline(audio_path)
     return diarization
 
-# Function to split audio based on diarization results
+
+# Function to split and merge audio segments by speaker, including gaps between consecutive segments
 def split_audio_by_speaker(audio_path, diarization):
     """
-    Splits the audio file into segments based on speaker diarization.
+    Splits and merges the audio file into segments based on speaker diarization.
+    Consecutive segments by the same speaker, including gaps, are combined.
 
     Args:
         audio_path (str): Path to the audio file.
@@ -43,18 +45,47 @@ def split_audio_by_speaker(audio_path, diarization):
     Returns:
         speaker_segments (list): List of dictionaries containing speaker segments.
     """
+    # Load the full audio file
     audio = AudioSegment.from_file(audio_path)
     speaker_segments = []
+
+    current_speaker = None
+    current_start = None
+    current_end = None  # Track end time across multiple segments
+
+    # Iterate over diarization results
     for turn, _, speaker in diarization.itertracks(yield_label=True):
-        start_ms = int(turn.start * 1000)
-        end_ms = int(turn.end * 1000)
-        segment_audio = audio[start_ms:end_ms]
+        start_ms = int(turn.start * 1000)  # Convert start time to milliseconds
+        end_ms = int(turn.end * 1000)      # Convert end time to milliseconds
+
+        # If the current segment is by the same speaker as the previous one
+        if speaker == current_speaker:
+            # Just update the end time to extend the segment (includes gaps)
+            current_end = end_ms
+        else:
+            # If the speaker changes, save the previous segment with the gap included
+            if current_speaker is not None:
+                speaker_segments.append({
+                    'speaker': current_speaker,
+                    'start': current_start,
+                    'end': current_end,  # End time of the last segment for that speaker
+                    'audio': audio[current_start:current_end]  # Include gaps in the audio
+                })
+
+            # Reset for the new speaker segment
+            current_speaker = speaker
+            current_start = start_ms  # Start time of the new speaker's first segment
+            current_end = end_ms  # End time of the new speaker's first segment
+
+    # Append the last speaker segment
+    if current_speaker is not None:
         speaker_segments.append({
-            'speaker': speaker,
-            'start': start_ms,
-            'end': end_ms,
-            'audio': segment_audio
+            'speaker': current_speaker,
+            'start': current_start,
+            'end': current_end,
+            'audio': audio[current_start:current_end]
         })
+
     return speaker_segments
 
 
@@ -128,7 +159,7 @@ def concatenate_videos(video_files, output_filename):
     # Concatenate videos
     ffmpeg.concat(*input_streams, v=1, a=1).output(output_filename).run(overwrite_output=True)
     
-    
+
 def concatenate_videos(video_files, output_filename):
     """
     Concatenates a list of video files into a single video.
@@ -145,10 +176,11 @@ def concatenate_videos(video_files, output_filename):
     final.write_videofile(f'final_vid/{output_filename}.mp4')
     
     
+
 # Main function to tie everything together
 def main():
     # Replace with your file paths and API key
-    audio_path = 'podcast_audio.mp3'
+    audio_path = 'notebook_podcast_1m.wav'
     male_image_path = 'images\Mark_Zuckerberg_720.jpg'
     female_image_path = 'images\Scarlett-Johansson_720.jpg '
 
@@ -175,15 +207,11 @@ def main():
 
     # Step 4: Concatenate Videos
     print("Concatenating videos...")
-    output_filename = 'final_video.mp4'
+    output_filename = 'final_video'
     concatenate_videos(video_files, output_filename)
 
     print(f"Final video saved as {output_filename}")
 
-    # Optional: Display the video on your website
-    # This part depends on your web framework (e.g., Flask, Django)
-    # You would typically send the video file path to your front-end
-    
-    
+
 if __name__ == "__main__":
     main()
