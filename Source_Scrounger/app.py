@@ -4,7 +4,7 @@ import urllib.parse
 
 app = Flask(__name__)
 
-api_key = "JbCYC0285hnrLl4OjipfFBopEhNuIdh0IDPNH2fdx-E"
+api_key = API_KEY
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
