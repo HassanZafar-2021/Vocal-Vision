@@ -19,7 +19,6 @@
             <img src="{{ url_for('static', filename='assets/Media.png') }}" alt="Media Image {{ i+1 }}">
             {% endfor %}
         </div>
-        <h1 class="title fancy-hover-text"></h1>
     </header>
 
     <!-- Main layout with buttons on the left and video output on the right -->
@@ -56,6 +55,15 @@
                 <button type="submit" class="bg-blue-500 text-white p-3 rounded w-full hover:bg-yellow-500">Generate Audio File</button>
             </form>
             <!-- End Form -->
+
+            <!-- Display Session ID -->
+            {% if session_id %}
+                <p>Your Session ID: {{ session_id }}</p>
+                <p>Use this ID to retrieve your video later.</p>
+            {% endif %}
+
+            <!-- Link to Retrieval Page -->
+            <p>To retrieve a previously processed video, <a href="{{ url_for('retrieve') }}">click here</a>.</p>
         </div>
 
         <!-- Divider -->
