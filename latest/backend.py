@@ -139,7 +139,7 @@ def main(audio_path, male_image_path, female_image_path, session_id):
 
     # Step 4: Concatenate Videos
     print("Concatenating videos...")
-    output_filename = str(datetime.now())
+    output_filename = datetime.now().strftime("%Y%m%d%H%M%S")
     concatenate_videos(video_files, output_filename, FINAL_VIDEO_FOLDER)
 
     print(f"Final video saved as {output_filename}.mp4")
