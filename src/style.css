@@ -1,84 +1,90 @@
 * {
-    background-color: #ffea88;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     transition: all 0.3s ease;
-    outline: none;
-    text-align: center;
-}
-.image-container {
-    display: flex; /* Use Flexbox for layout */
-    flex-wrap: wrap; /* Allow items to wrap if necessary */
-    flex-direction: row; /* Set direction to row (default) */
-}
-.image-container img {
-    margin-left: 1px;
-    width: 5.0%; /* Set width for images */
-    margin: 5px; /* Space between images */
-}
-h1 {
-    text-decoration: 30px red dashed;
-    background-color: red;
-}
-@keyframes fadeInOut {
-    0% {
-        opacity: 0; /* Fully transparent */
-    }
-    50% {
-        opacity: 1; /* Fully opaque */
-    }
-    100% {
-        opacity: 0; /* Fully transparent again */
-    }
 }
 
-#first {
-    animation: fadeInOut 5s ease-in-out infinite; /* Repeat every 5 seconds */
-    color: #333;
-    font-size: px;
-    text-decoration-line: underline;
-    padding-top: 30px;
-    color:chocolate
+/* Body background color */
+body {
+    background-color: #ffea88;
 }
+
+/* Image row above the NoteTube title */
+.image-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* Add space between images */
+    margin-bottom: 20px; /* Space between images and the title */
+}
+
+.image-row img {
+    width: 5%; /* Set image size */
+    margin: 5px; /* Add space around images */
+}
+
+/* Fancy text animation for the title */
+.fancy-hover-text {
+    font-size: 42px;
+    color: #FF4500;
+    text-decoration: 2px dashed red;
+    display: inline-block;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.fancy-hover-text:hover {
+    transform: scale(1.1) rotate(-5deg);
+    color: #FFD700;
+}
+
+/* Header styling */
 header {
-flex-direction: column;
-flex-wrap: nowrap;
-flex:auto;
-font-size: 24px;
-text-align: center;
-
-
-}
-.drag-drop-box {
-    margin-top: 10px;
-    padding: 15px;
-    font-size: 20px;
-
+    text-align: center;
+    padding: 20px;
 }
 
-#fileButton {
-    cursor: pointer;
-    border-radius: 10px;
-    width: 70%;
-    max-width: 300%;
-    background-color: aqua;
-}
-#fileImgButton1 {
-    background-color: greenyellow;
-    cursor: pointer;
-    width: 40%;
-    max-width: 300%;
-}
-
-#fileImgButton2 {
-    background-color: greenyellow;
-    cursor: pointer;
-    width: 40%;
-    max-width: 300%;
-}
-#output {
-    width: 300px;
-    height: 300px;
+/* Big red divider */
+.divider {
+    height: 500px;
+    width: 6px;
     background-color: red;
+}
+
+/* Video output styling */
+#output {
+    width: 500px;
+    height: 300px;
+    background-color: #000;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+/* Button section styling */
+.button-section {
+    border: 4px solid blue; /* Blue border */
+    padding: 10px;
+    border-radius: 12px; /* Rounded corners */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Box shadow */
+    background-color: #fffbe0; /* Yellow background inside */
+}
+
+/* Button styles */
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Yellow highlight on button hover */
+button:hover {
+    background-color: #ffd700; /* Yellow color when hovered */
 }
