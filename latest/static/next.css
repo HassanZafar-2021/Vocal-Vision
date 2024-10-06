@@ -1,6 +1,17 @@
 * {
     text-align: center;
     background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the content */
+    justify-content: center; /* Center the content vertically */
+    height: 100vh; /* Full viewport height */
+    padding: 20px; /* Add some padding around the content */
 }
 
 button {
@@ -25,7 +36,7 @@ h1 {
     border: 5px solid black;
     box-shadow: 0 0 0 4px lightblue;
     width: 40%;
-    margin-left: 400px;
+    margin: 20px auto; /* Center horizontally */
     text-shadow: 2px 2px 5px lightgray;
     animation: pulse 3s infinite;
 }
@@ -46,26 +57,39 @@ a:hover {
     color: darkblue;
     text-decoration: underline;
 }
+
 form {
-    background-color:#fff;
     background-color: aqua;
 }
 
 .container {
     position: relative; /* Positioning for pseudo-elements */
-    margin-top: 130px;
+    margin: 20px auto; /* Center with margin */
     padding: 20px;
-    font-size: 40px;
+    font-size: 20px;
     background-color: aqua;
     border: 2px solid lightgray;
     border-radius: 15px;
-    width: 100%;
-    height: 250%;
-    max-height: 300%;
+    width: 80%; /* Smaller width */
+    max-width: 600px; /* Max width for larger screens */
+    height: auto; /* Auto height based on content */
     box-shadow: 5px 5px 50px rgba(0, 0, 0, 0.2);
     border-color: blue;
     box-sizing: border-box;
-    border-radius: 30px;
+    animation: shake 0.5s; /* Shake animation on hover */
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 0); }
+    25% { transform: translate(-1px, 0); }
+    50% { transform: translate(1px, 0); }
+    75% { transform: translate(-1px, 0); }
+    100% { transform: translate(1px, 0); }
+}
+
+.container:hover {
+    animation: shake 0.5s; /* Trigger shake effect on hover */
 }
 
 .container::before, .container::after {
@@ -92,8 +116,6 @@ form {
 label {
     text-decoration: underline;
     font-family: cursive;
-    background-color: aqua;
-    
 }
 
 footer {
@@ -108,11 +130,12 @@ footer {
 @media screen and (max-width: 768px) {
     h1 {
         width: 80%;
-        margin-left: 10px;
+        margin: 20px auto; /* Center horizontally */
     }
 
     .container {
         font-size: 16px;
         padding: 10px;
+        width: 90%; /* Slightly larger width on small screens */
     }
 }
