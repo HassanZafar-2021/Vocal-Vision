@@ -25,7 +25,9 @@ body {
     font-weight: bold; /* Make the title bold */
     animation: sparkle 1.5s infinite; /* Sparkle effect */
 }
-
+#me {
+    text-align: center;
+}
 /* Sparkle Animation */
 @keyframes sparkle {
     0%, 100% {
@@ -35,7 +37,6 @@ body {
         text-shadow: 0 0 10px #fff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
     }
 }
-
 /* Shake Animation */
 @keyframes shake {
     0% { transform: translate(1px, 0); }
@@ -120,3 +121,4 @@ button:hover {
     align-items: center;
     color: white;
 }
+
