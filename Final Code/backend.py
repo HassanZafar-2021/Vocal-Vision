@@ -7,6 +7,7 @@ from tempfile import NamedTemporaryFile
 import time
 from tqdm import tqdm
 from moviepy.editor import *
+from datetime import datetime
 
 HUGGING_FACE_TOKEN = "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"
 GOOEY_API_KEY = "sk-HGaovVUDOJjviGvPxbFhYnexMnKQgJShGeg3qdbHJ7hwQ1bQ"
@@ -53,7 +54,7 @@ def split_audio_by_speaker(audio_path, diarization):
             'audio': audio[current_start:current_end]
         })
 
-    return speaker_segments
+    return speaker_segments[:6]
 
 # Function to generate video using Gooey.AI API
 def generate_video(segment, speaker_images, TMP_FOLDER, VIDS_TO_JOIN_FOLDER):
@@ -105,7 +106,7 @@ def concatenate_videos(video_files, output_filename, FINAL_VIDEO_FOLDER):
     final.write_videofile(final_output_path)
 
 # Main function to tie everything together
-def main(audio_path, male_image_path, female_image_path):
+def main(audio_path, male_image_path, female_image_path, session_id):
     # Create required folders if they don't exist
     TMP_FOLDER = 'tmp'
     VIDS_TO_JOIN_FOLDER = 'vids_to_join'
@@ -138,7 +139,7 @@ def main(audio_path, male_image_path, female_image_path):
 
     # Step 4: Concatenate Videos
     print("Concatenating videos...")
-    output_filename = 'final_video'
+    output_filename = str(datetime.now())
     concatenate_videos(video_files, output_filename, FINAL_VIDEO_FOLDER)
 
     print(f"Final video saved as {output_filename}.mp4")
