@@ -36,7 +36,7 @@ app.config['TMP_FOLDER'] = TMP_FOLDER
 app.config['VIDS_TO_JOIN_FOLDER'] = VIDS_TO_JOIN_FOLDER
 
 # MongoDB Atlas Connection
-client = MongoClient("mongodb+srv://yaaryan12:FQSXeGTtkaVLwo3C@divhacks.6look.mongodb.net/?retryWrites=true&w=majority&appName=DivHacks")
+client = MongoClient("Connection_Token")
 db = client['vocal_visions']  # Database name
 collection = db['uploads']     # Collection name
 
