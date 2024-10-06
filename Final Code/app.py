@@ -1,6 +1,10 @@
-from flask import Flask, render_template, request, url_for, send_from_directory
+from flask import Flask, render_template, request, url_for, send_from_directory, redirect
 import os
 from werkzeug.utils import secure_filename
+from backend import main
+from pymongo import MongoClient
+import uuid
+from datetime import datetime, timezone
 
 # Import your backend functions
 from backend import main  # Ensure your backend code is in backend.py
@@ -31,6 +35,11 @@ app.config['FINAL_VIDEO_FOLDER'] = FINAL_VIDEO_FOLDER
 app.config['TMP_FOLDER'] = TMP_FOLDER
 app.config['VIDS_TO_JOIN_FOLDER'] = VIDS_TO_JOIN_FOLDER
 
+# MongoDB Atlas Connection
+client = MongoClient("mongodb+srv://yaaryan12:FQSXeGTtkaVLwo3C@divhacks.6look.mongodb.net/?retryWrites=true&w=majority&appName=DivHacks")
+db = client['vocal_visions']  # Database name
+collection = db['uploads']     # Collection name
+
 def allowed_file(filename, allowed_extensions):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in allowed_extensions
@@ -38,7 +47,13 @@ def allowed_file(filename, allowed_extensions):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     video_url = None
+    session_id = None
+
     if request.method == 'POST':
+        # Generate a unique session ID
+        session_id = str(uuid.uuid4())
+        print(f"Session ID: {session_id}")
+        
         # Check if files are present in the request
         if 'audioUpload' not in request.files or \
            'maleAvatar' not in request.files or \
@@ -71,13 +86,54 @@ def index():
         else:
             return "Invalid female avatar image", 400
 
+        # Save metadata to MongoDB
+        document = {
+            'session_id': session_id,
+            'audio_filename': audio_filename,
+            'male_avatar_filename': male_avatar_filename,
+            'female_avatar_filename': female_avatar_filename,
+            'upload_time': datetime.now(timezone.utc),
+            'status': 'Processing',
+            'video_filename': None,
+        }
+        collection.insert_one(document)
+        print('Saved Metadata...')
+
         # Run the backend processing code
-        output_filename = main(audio_path, male_avatar_path, female_avatar_path)
+        output_filename = main(audio_path, male_avatar_path, female_avatar_path, session_id)
+
+        # Update MongoDB with the output filename and status
+        collection.update_one(
+            {'session_id': session_id},
+            {'$set': {
+                'video_filename': output_filename,
+                'status': 'Completed',
+                'completion_time': datetime.now(timezone.utc),
+            }}
+        )
 
         # Generate video URL for display
         video_url = url_for('final_video', filename=output_filename)
 
-    return render_template('index.html', video_url=video_url)
+    return render_template('index.html', video_url=video_url, session_id=session_id)
+
+@app.route('/retrieve', methods=['GET', 'POST'])
+def retrieve():
+    video_url = None
+    session_id = None
+    if request.method == 'POST':
+        session_id = request.form.get('session_id')
+        if session_id:
+            # Search for the session in MongoDB
+            document = collection.find_one({'session_id': session_id})
+            if document and document.get('video_filename'):
+                video_url = url_for('final_video', filename=document['video_filename'])
+            else:
+                return "Session ID not found or video not yet processed.", 404
+        else:
+            return "No Session ID provided.", 400
+
+    return render_template('retrieve.html', video_url=video_url, session_id=session_id)
 
 # Route to serve the final video
 @app.route('/final_vid/<filename>')
