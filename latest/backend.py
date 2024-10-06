@@ -9,8 +9,8 @@ from tqdm import tqdm
 from moviepy.editor import *
 from datetime import datetime
 
-HUGGING_FACE_TOKEN = "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"
-GOOEY_API_KEY = "sk-HGaovVUDOJjviGvPxbFhYnexMnKQgJShGeg3qdbHJ7hwQ1bQ"
+HUGGING_FACE_TOKEN = "..."
+GOOEY_API_KEY = "..."
 
 # Function to perform speaker diarization
 def diarize_audio(audio_path):
