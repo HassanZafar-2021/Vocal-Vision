@@ -3,27 +3,51 @@ import requests
 import json
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
-import ffmpeg
 from tempfile import NamedTemporaryFile
-import time
-from transformers import pipeline
-import soundfile as sf
-import pickle
+from flask import Flask, render_template, request, redirect, url_for
+from pymongo import MongoClient
 from tqdm import tqdm
-from moviepy.editor import *
+from moviepy.editor import concatenate_videoclips, VideoFileClip
 
+app = Flask(__name__)
 
+# MongoDB Atlas connection (replace with your connection string)
+client = MongoClient("mongodb+srv://hassaanzafar3:divhacks@divhacks.fxivv.mongodb.net/?retryWrites=true&w=majority&appName=DivHacks")
+db = client['DivHacks']  # Database name
+
+# Your Hugging Face and Gooey API keys
 HUGGING_FACE_TOKEN = "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"
 GOOEY_API_KEY = "sk-HGaovVUDOJjviGvPxbFhYnexMnKQgJShGeg3qdbHJ7hwQ1bQ"
+
+# Example route
+@app.route('/')
+def index():
+    return render_template('prac.html')
+
+@app.route('/process_audio', methods=['POST'])
+def process_audio():
+    audio_file = request.files['audio_file']
+    if audio_file:
+        # Save the file temporarily
+        audio_path = os.path.join('tmp', audio_file.filename)
+        audio_file.save(audio_path)
+
+        # Call your main processing function here
+        try:
+            main(audio_path)  # Modify main to accept the path of the audio file
+            return redirect(url_for('index'))  # Redirect to index after processing
+        except Exception as e:
+            print(f"Error processing audio: {e}")
+            return render_template('index.html', error="An error occurred during processing.")
+    else:
+        return render_template('index.html', error="No audio file uploaded.")
 
 # Function to perform speaker diarization
 def diarize_audio(audio_path):
     """
     Performs speaker diarization on the input audio file.
-
     Args:
         audio_path (str): Path to the audio file.
-
     Returns:
         diarization (Annotation): Diarization results.
     """
@@ -31,21 +55,17 @@ def diarize_audio(audio_path):
     diarization = pipeline(audio_path)
     return diarization
 
-
 # Function to split and merge audio segments by speaker, including gaps between consecutive segments
 def split_audio_by_speaker(audio_path, diarization):
     """
     Splits and merges the audio file into segments based on speaker diarization.
     Consecutive segments by the same speaker, including gaps, are combined.
-
     Args:
         audio_path (str): Path to the audio file.
         diarization (Annotation): Diarization results.
-
     Returns:
         speaker_segments (list): List of dictionaries containing speaker segments.
     """
-    # Load the full audio file
     audio = AudioSegment.from_file(audio_path)
     speaker_segments = []
 
@@ -53,31 +73,25 @@ def split_audio_by_speaker(audio_path, diarization):
     current_start = None
     current_end = None  # Track end time across multiple segments
 
-    # Iterate over diarization results
     for turn, _, speaker in diarization.itertracks(yield_label=True):
         start_ms = int(turn.start * 1000)  # Convert start time to milliseconds
         end_ms = int(turn.end * 1000)      # Convert end time to milliseconds
 
-        # If the current segment is by the same speaker as the previous one
         if speaker == current_speaker:
-            # Just update the end time to extend the segment (includes gaps)
             current_end = end_ms
         else:
-            # If the speaker changes, save the previous segment with the gap included
             if current_speaker is not None:
                 speaker_segments.append({
                     'speaker': current_speaker,
                     'start': current_start,
-                    'end': current_end,  # End time of the last segment for that speaker
-                    'audio': audio[current_start:current_end]  # Include gaps in the audio
+                    'end': current_end,
+                    'audio': audio[current_start:current_end]
                 })
 
-            # Reset for the new speaker segment
             current_speaker = speaker
-            current_start = start_ms  # Start time of the new speaker's first segment
-            current_end = end_ms  # End time of the new speaker's first segment
+            current_start = start_ms
+            current_end = end_ms
 
-    # Append the last speaker segment
     if current_speaker is not None:
         speaker_segments.append({
             'speaker': current_speaker,
@@ -88,17 +102,13 @@ def split_audio_by_speaker(audio_path, diarization):
 
     return speaker_segments
 
-
 # Function to generate video using Gooey.AI API
 def generate_video(segment, speaker_images):
     """
     Generates a lip-synced video using the Gooey.AI API.
-
     Args:
-        segment_audio (AudioSegment): Audio segment of the speaker.
-        image_path (str): Path to the speaker's image.
-        api_key (str): Gooey.AI API key.
-
+        segment (dict): Audio segment of the speaker.
+        speaker_images (dict): Speaker images mapped to their IDs.
     Returns:
         video_filename (str): Filename of the downloaded video.
     """
@@ -109,9 +119,7 @@ def generate_video(segment, speaker_images):
 
     if not image_path:
         raise ValueError(f"No image found for speaker {speaker}")
-    
 
-    
     tmp_audio_file_name = f'tmp/tmp_audio_{speaker}.wav'
     segment_audio.export(tmp_audio_file_name, format='wav')
 
@@ -132,38 +140,17 @@ def generate_video(segment, speaker_images):
     assert response.ok, response.content
 
     result = response.json()
-    
-    # Download the video
     video_response = requests.get(result['output']['output_video'])
     video_filename = f"vids_to_join/{speaker}_{start_time}.mp4"
     with open(video_filename, 'wb') as f:
         f.write(video_response.content)
-        
-    return video_filename
 
+    return video_filename
 
 # Function to concatenate videos
 def concatenate_videos(video_files, output_filename):
     """
     Concatenates a list of video files into a single video.
-
-    Args:
-        video_files (list): List of video filenames.
-        output_filename (str): Filename for the concatenated video.
-    """
-    # Create input streams for ffmpeg
-    input_streams = []
-    for video_file in video_files:
-        input_streams.append(ffmpeg.input(video_file))
-
-    # Concatenate videos
-    ffmpeg.concat(*input_streams, v=1, a=1).output(output_filename).run(overwrite_output=True)
-    
-
-def concatenate_videos(video_files, output_filename):
-    """
-    Concatenates a list of video files into a single video.
-
     Args:
         video_files (list): List of video filenames.
         output_filename (str): Filename for the concatenated video.
@@ -171,18 +158,14 @@ def concatenate_videos(video_files, output_filename):
     input_streams = []
     for video_file in video_files:
         input_streams.append(VideoFileClip(video_file))
-        
+
     final = concatenate_videoclips(input_streams)
     final.write_videofile(f'final_vid/{output_filename}.mp4')
-    
-    
 
 # Main function to tie everything together
-def main():
-    # Replace with your file paths and API key
-    audio_path = 'notebook_podcast_1m.wav'
-    male_image_path = 'images\Mark_Zuckerberg_720.jpg'
-    female_image_path = 'images\Scarlett-Johansson_720.jpg '
+def main(audio_path):
+    male_image_path = 'images/Mark_Zuckerberg_720.jpg'
+    female_image_path = 'images/Scarlett-Johansson_720.jpg'
 
     # Step 1: Speaker Diarization
     print("Performing speaker diarization...")
@@ -210,8 +193,7 @@ def main():
     output_filename = 'final_video'
     concatenate_videos(video_files, output_filename)
 
-    print(f"Final video saved as {output_filename}")
+    print(f"Final video saved as {output_filename}.mp4")
 
-
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    app.run(debug=True)

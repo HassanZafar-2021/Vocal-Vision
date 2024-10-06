@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Processing</title>
+</head>
+<body>
+    <h1>Upload Audio File</h1>
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% endif %}
+    <form action="/process_audio" method="post" enctype="multipart/form-data">
+        <input type="file" name="audio_file" accept=".wav" required>
+        <input type="submit" value="Upload">
+    </form>
+</body>
+</html>

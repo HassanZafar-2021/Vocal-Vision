@@ -1,6 +1,0 @@
-pyannote.audio 
-pydub 
-requests 
-transformers 
-soundfile 
-moviepy
