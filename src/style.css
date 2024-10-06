@@ -7,14 +7,16 @@
     outline: none;
     text-align: center;
 }
-img {
-    display:inline;
-    flex-wrap: wrap;
-    width: 5%;
-    height: auto;
-    flex-direction: row;
+.image-container {
+    display: flex; /* Use Flexbox for layout */
+    flex-wrap: wrap; /* Allow items to wrap if necessary */
+    flex-direction: row; /* Set direction to row (default) */
 }
-
+.image-container img {
+    margin-left: 1px;
+    width: 5.0%; /* Set width for images */
+    margin: 5px; /* Space between images */
+}
 h1 {
     text-decoration: 30px red dashed;
     background-color: red;
