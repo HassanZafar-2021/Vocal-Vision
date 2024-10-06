@@ -1,0 +1,84 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 60%;
+    margin: auto;
+    overflow: hidden;
+    padding: 40px 0;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    text-align: center;
+    margin-top: 30px;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.source-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.source-list li {
+    background: #fff;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.source-item {
+    display: flex;
+    align-items: center;
+}
+
+.favicon {
+    width: 64px;
+    height: 64px;
+    margin-right: 20px;
+}
+
+.source-content {
+    flex: 1;
+}
+
+.source-list a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+}
+
+.source-list p {
+    color: #666;
+}
+
+.source-url {
+    font-size: 12px;
+    color: #999;
+}
+
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #333;
+}
