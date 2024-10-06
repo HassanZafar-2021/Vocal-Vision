@@ -7,16 +7,45 @@
     outline: none;
     text-align: center;
 }
+img {
+    display:inline;
+    flex-wrap: wrap;
+    width: 5%;
+    height: auto;
+    flex-direction: row;
+}
+
 h1 {
     text-decoration: 30px red dashed;
-    border: 20px blue solid;
-    box-shadow: 0 0 0 20px firebrick;
+    background-color: red;
+}
+@keyframes fadeInOut {
+    0% {
+        opacity: 0; /* Fully transparent */
+    }
+    50% {
+        opacity: 1; /* Fully opaque */
+    }
+    100% {
+        opacity: 0; /* Fully transparent again */
+    }
+}
+
+#first {
+    animation: fadeInOut 5s ease-in-out infinite; /* Repeat every 5 seconds */
+    color: #333;
+    font-size: px;
+    text-decoration-line: underline;
+    padding-top: 30px;
+    color:chocolate
 }
 header {
 flex-direction: column;
 flex-wrap: nowrap;
 flex:auto;
 font-size: 24px;
+text-align: center;
+
 
 }
 .drag-drop-box {

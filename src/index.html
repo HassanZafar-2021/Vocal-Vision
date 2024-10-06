@@ -3,31 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube</title>
+    <title>NoteTube</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<header>
-    <h1 class="font-bold">Welcome To Youtube</h1>
-</header>
-<main>
-    <form>
-        <label>
-            Podcast Audio File
-            <input type="file" id="fileInput" name="podcast-file" accept="audio/wav">
-        </label>
-        <label>
-            Male Avatar
-            <input type="file" id="maleAvatar" name="male-avatar" accept="image/jpeg">
-        </label>
-        <label>
-            Female Avatar
-            <input type="file" id="femaleAvatar" name="female-avatar" accept="image/jpeg">
-        </label>
-        <video id="output"></video>
+    <header>
+        <img src="Media.png" alt="Description of the image">
+        <img src="Media.png" alt="Description of the image">
+        <img src="Media.png" alt="Description of the image">
+        <img src="Media.png" alt="Description of the image">
+        
+        <h1><strong>Welcome To 📓NoteTube▶️</h1></strong>
+        <p id="first">Convenient Notebook LM usage on avatars gathering summary from Youtube videos with tag categories!</p>
+    </header>
+<main class="flex justify-center items-center h-dvh gap-5">
+    <form class="grid grid-cols-2 gap-5 border p-5 rounded-md">
+        <div class="relative w-[300px] h-[300px] flex items-center border">
+            <p class="text-center w-full">Drag and drop male avatar.</p>
+            <img class="hidden max-w-[300px] max-h-[300px] w-full h-full object-cover" id="malePreview" alt="Preview of selected male avatar." />
+            <input class="absolute w-full h-full opacity-0 cursor-pointer" type="file" id="maleAvatar" name="male-avatar" accept="image/jpeg">
+        </div>
+        <div class="relative w-[300px] h-[300px] flex items-center border">
+            <p class="text-center w-full">Drag and drop female avatar.</p>
+            <img class="hidden max-w-[300px] max-h-[300px] w-full h-full object-cover" id="femalePreview" alt="Preview of selected female avatar." hidden />
+            <input class="absolute w-full h-full opacity-0 cursor-pointer" type="file" id="femaleAvatar" name="female-avatar" accept="image/jpeg">
+        </div>
+        <div class="relative w-[300px] h-[32px] flex items-center border rounded-md">
+            <p class="text-center w-full">Upload podcast audio file.</p>
+            <audio id="audioPreview" class="hidden" controls></audio>
+            <input class="absolute w-full h-full opacity-0 cursor-pointer" type="file" id="audioUpload" name="audio-file" accept="image/jpeg">
+        </div>
+        <button type="submit">Generate podcast video</button>
     </form>
+    <section>
+        <h1>Output Video:</h1>
+        <video id="output" controls title="The output video will be displayed here."></video>
+    </section>
+    <script src="script.js"></script>
 </main>
-
 </body>
 </html>

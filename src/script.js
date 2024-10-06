@@ -1,42 +1,47 @@
-const dropZone = document.getElementById('dropZone');
-const fileInput = document.getElementById('fileInput');
-const fileButton = document.getElementById('fileButton');
-const errorMessage = document.getElementById('error-message');
+const maleAvatarUpload = document.querySelector('#maleAvatar');
+const maleAvatarPreview = document.querySelector('#malePreview');
 
-// Show file explorer when button is clicked
-fileButton.addEventListener('click', () => {
-  fileInput.click();
-});
+const femaleAvatarUpload = document.querySelector('#femaleAvatar');
+const femaleAvatarPreview = document.querySelector('#femalePreview');
 
-// Handle drag and drop functionality
-dropZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropZone.style.borderColor = 'green';
-});
+const audioUpload = document.querySelector('#audioUpload');
+const audioPreview = document.querySelector('#audioPreview');
 
-dropZone.addEventListener('dragleave', () => {
-  dropZone.style.borderColor = 'grey';
-});
+maleAvatarUpload.addEventListener("change", evt => {
+  const file = evt.target.files[0];
+  if (file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", e => {
+        maleAvatarPreview.src = e.target.result;
+        maleAvatarPreview.style.display = 'block';
+      });
 
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  handleFiles(e.dataTransfer.files);
-  dropZone.style.borderColor = 'grey';
-});
-
-// Handle file input via button
-fileInput.addEventListener('change', () => {
-  handleFiles(fileInput.files);
-});
-
-// Function to handle file validation
-function handleFiles(files) {
-  const file = files[0];
-  if (file && file.type.startsWith('audio/')) {
-    errorMessage.style.display = 'none';
-    alert(`Audio file "${file.name}" selected successfully!`);
-  } else {
-    errorMessage.style.display = 'block';
-    errorMessage.textContent = 'Please select a valid audio file.';
+      reader.readAsDataURL(file);
   }
-}
+});
+
+femaleAvatarUpload.addEventListener("change", evt => {
+  const file = evt.target.files[0];
+  if (file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", e => {
+        femaleAvatarPreview.src = e.target.result;
+        femaleAvatarPreview.style.display = 'block';
+      });
+
+      reader.readAsDataURL(file);
+  }
+});
+
+audioUpload.addEventListener("change", evt => {
+  const file = evt.target.files[0];
+  if (file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", e => {
+        audioPreview.src = e.target.result;
+        audioPreview.style.display = 'block';
+      });
+
+      reader.readAsDataURL(file);
+  }
+});
