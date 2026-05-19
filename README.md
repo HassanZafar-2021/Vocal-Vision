@@ -2,7 +2,7 @@
 
 ## Description
 
-This project extends NotebookLM by converting textual queries into engaging video podcasts with talking male and female avatars for input. By integrating advanced AI technologies such as speaker MP3 audio files to submit and video generation, the platform enhances NotebookLM’s capabilities, adding a visual dimension to information sharing. A website hosts this using frontend (JS, CSS, HTML) and backend (MongoDB Atlas, Python Flask).
+Vocal-Vision extends [Google NotebookLM](https://notebooklm.google.com/) by transforming text and audio queries into dynamic video podcasts featuring AI-generated talking avatars. The platform integrates speaker MP3 audio files and AI-driven video generation to add a compelling visual layer to knowledge sharing. A full-stack web application hosts the experience, built with a JavaScript/CSS/HTML frontend and a Python Flask backend connected to MongoDB Atlas.
 
 ## Table of Contents
 
@@ -12,46 +12,56 @@ This project extends NotebookLM by converting textual queries into engaging vide
 - [Credits](#credits)
 - [License](#license)
 - [Features](#features)
-- [Contribute](#how-to-contribute)
+- [How To Contribute](#how-to-contribute)
 - [Tests](#tests)
 
 ## Installation
 
-Download Python flask and download mp3 audio files with the support of Google Notebook
+1. Clone the repository.
+2. Install Python dependencies:
+```bash
+   pip install flask pymongo
+```
+3. Obtain speaker MP3 audio files via [Google NotebookLM](https://notebooklm.google.com/).
+4. Configure your MongoDB Atlas connection string in the environment variables.
 
 ## Usage
 
-Open localhost python with support of MongoDB
+1. Start the Flask development server:
+```bash
+   python app.py
+```
+2. Open `http://localhost:5000` in your browser.
+3. Input a text or audio query, optionally upload speaker images, and generate your video podcast.
 
 ## Credits
 
-No collaborators
+1. https://github.com/HassanZafar-2021
+2. https://github.com/Aaryan369
 
 ## License
 
-No license
-
-## Badges
-
-Input text or audio queries
-Upload images of speakers
-Generate personalized video podcasts with AI-generated talking avatars
-Supports up to 14 languages
-the agile methodology used to update this project with more languages and longer video duration
+MIT License
 
 ## Features
 
-Input text or audio queries
-Upload images of speakers
-Generate personalized video podcasts with AI-generated talking avatars
-Supports up to 14 languages
-the agile methodology used to update this project with more languages and longer video duration
-Award: This project won me a sponsored track, "Best use of Notebook LM," to win prizes at DivHacks at Columbia University.
+- 🎙️ Input text or audio queries to drive podcast generation
+- 🖼️ Upload images of speakers to personalize avatars
+- 🤖 AI-generated talking avatars synced to NotebookLM audio output
+- 🌍 Supports up to 14 languages
+- 🏆 **Award:** Won the sponsored *"Best Use of NotebookLM"* track at **DivHacks @ Columbia University**
+- 🔄 Built with Agile methodology — iteratively expanding language support and video duration
 
 ## How To Contribute
 
-Fork repo and make a pull request with your changes
+1. Fork the repository.
+2. Create a feature branch: `git checkout -b feature/your-feature`
+3. Commit your changes and open a pull request against `main`.
 
 ## Tests
 
-Make tests folder and run npm run tests
+1. Create a `tests/` directory in the project root.
+2. Run the test suite:
+```bash
+   npm run tests
+```
